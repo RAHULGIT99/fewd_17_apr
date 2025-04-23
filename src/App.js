@@ -39,41 +39,38 @@
 // }
 // export default App;
 
-import React, { useState } from 'react';
-import TodoInput from './TodoInput';
-import TodoList from './TodoList';
+import React from 'react';
 import './App.css';
+import LifecycleComponent from './LifecycleComponent';
 
-const App = () => {
-  const [tasks, setTasks] = useState([]);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showComponent: true
+    };
+  }
 
-  const addTask = (task) => {
-    setTasks([...tasks, { id: Date.now(), text: task, isCompleted: false }]);
-  };
+  toggleComponent = () => {
+    this.setState(prevState => ({
+      showComponent: !prevState.showComponent
+    }));
+  }
 
-  const toggleTaskCompletion = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
-      )
+  render() {
+    return (
+      <div className="app">
+        <h1>Lifecycle Methods Demo</h1>
+        <button onClick={this.toggleComponent}>
+          {this.state.showComponent ? 'Unmount Component' : 'Mount Component'}
+        </button>
+        {this.state.showComponent && <LifecycleComponent value={this.state.showComponent} />}
+        <div className="console-note">
+          <h3>Check the console (F12) to see lifecycle method logs</h3>
+        </div>
+      </div>
     );
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  return (
-    <div className="app-container">
-      <h1 className="app-title">To-Do List Planner</h1>
-      <TodoInput addTask={addTask} />
-      <TodoList
-        tasks={tasks}
-        toggleTaskCompletion={toggleTaskCompletion}
-        deleteTask={deleteTask}
-      />
-    </div>
-  );
-};
+  }
+}
 
 export default App;
